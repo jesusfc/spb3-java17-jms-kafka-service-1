@@ -15,9 +15,11 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class HelloJMSMessage {
+public class JmsMessage {
 
     private UUID uuid;
+    private String to;
     private String message;
+    private String body;
 
 }
