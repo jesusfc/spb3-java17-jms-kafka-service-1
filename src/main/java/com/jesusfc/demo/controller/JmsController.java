@@ -13,13 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RestController
 public class JmsController {
-/*
+
     private JmsSender jmsSender;
 
+    /**
+     * Sends a message to the JMS queue.
+     *
+     * @param message the message to be sent
+     */
     @PostMapping("/send")
     public void sendMessage(@RequestBody String message) {
         jmsSender.sendMessage(message);
     }
 
- */
 }

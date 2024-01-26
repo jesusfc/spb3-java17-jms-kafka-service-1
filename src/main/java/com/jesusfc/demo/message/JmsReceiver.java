@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JmsReceiver {
 
-    @JmsListener(destination = JmsMessageConfig.MY_SEND_RCV_QUEUE)
+    @JmsListener(destination = JmsMessageConfig.MY_QUEUE)
     public void receiveMessage(@Payload JmsMessage helloWorldMessage,
                                @Headers MessageHeaders headers, Message message){
 
