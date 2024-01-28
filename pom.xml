@@ -17,7 +17,9 @@
     <name>spb3-java17-jms-kafka</name>
     <description>Project to test JMS Messaging and Apache Kafka with Spring Boot 3 and Java 17</description>
 
-
+    <properties>
+        <jacocoVersion>0.8.10</jacocoVersion>
+    </properties>
 
     <dependencies>
 
@@ -39,6 +41,19 @@
             <version>2.23.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <version>${jacocoVersion}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacocoVersion}</version>
+        </dependency>
+
         <!-- Kafka Dependencies
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -57,6 +72,35 @@
         </dependency>
  -->
     </dependencies>
-
-
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacocoVersion}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
