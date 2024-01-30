@@ -1,10 +1,10 @@
 package com.jesusfc.demo;
 
+import com.jesusfc.demo.config.JmsMessageConfig;
 import com.jesusfc.demo.model.JmsMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class Spb3Java17JmsKafkaApplication {
 				.message("Hello there")
 				.body("Super Body").build();
 
-		jmsTemplate.convertAndSend("mailbox", jmsMessage);
+		jmsTemplate.convertAndSend(JmsMessageConfig.MY_QUEUE, jmsMessage);
 
 	}
 

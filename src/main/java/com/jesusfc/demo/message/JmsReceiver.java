@@ -18,11 +18,20 @@ public class JmsReceiver {
 
     @JmsListener(destination = JmsMessageConfig.MY_QUEUE)
     public void receiveMessage(@Payload JmsMessage helloWorldMessage,
-                               @Headers MessageHeaders headers, Message message){
+                               @Headers MessageHeaders headers, Message message) {
 
         System.out.println("I Got a Message!!!!!");
         System.out.println(helloWorldMessage);
         System.out.println("Received <" + message + ">");
+    }
+
+    @JmsListener(destination = JmsMessageConfig.MY_SEND_RCV_QUEUE)
+    public void receiveHelloMessage(@Payload JmsMessage helloWorldMessage,
+                                    @Headers MessageHeaders headers, Message message) {
+
+        System.out.println("I Got a Hello World Message!!!!!");
+        System.out.println(helloWorldMessage);
+        System.out.println("Received Hello world <" + message + ">");
     }
 
 }

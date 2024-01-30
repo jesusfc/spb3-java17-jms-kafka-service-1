@@ -5,6 +5,10 @@ Project to test JMS Messaging and Apache Kafka with Spring Boot 3 and Java 17
 - Project Lombok
 - JMS Messaging
 - Apache Kafka
+- JoCoco Test coverage
+- Docker (www.docker.com)
+- Docker with Intellij (https://www.jetbrains.com/help/idea/docker.html)
+- ActiveMQ with Docker Container (https://activemq.apache.org/components/artemis/documentation/latest/docker.html#docker)
 
 
 # See more or bibliography
