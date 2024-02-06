@@ -1,14 +1,10 @@
 package com.jesusfc.demo.message;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jesusfc.demo.config.JmsMessageConfig;
 import com.jesusfc.demo.model.JmsMessage;
-import jakarta.jms.JMSException;
-import jakarta.jms.Message;
 import lombok.AllArgsConstructor;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -27,21 +23,25 @@ public class JmsSender {
 
     @Scheduled(fixedRate = 5000) // every 5 seconds
     public void sendMessage() {
+        try {
+            System.out.println("Test Message Scheduled");
 
-        System.out.println("Test Message Scheduled");
+            JmsMessage message = JmsMessage
+                    .builder()
+                    .uuid(UUID.randomUUID())
+                    .message("Test Message Scheduled")
+                    .build();
 
-        JmsMessage message = JmsMessage
-                .builder()
-                .uuid(UUID.randomUUID())
-                .message("Test Message Scheduled")
-                .build();
+            jmsTemplate.convertAndSend(JmsMessageConfig.MY_QUEUE, message);
+            System.out.println("Scheduled Message Sent!");
 
-        jmsTemplate.convertAndSend(JmsMessageConfig.MY_QUEUE, message);
-
-        System.out.println("Scheduled Message Sent!");
-
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
+
+    /*
     @Scheduled(fixedRate = 5000) // every 5 seconds
     public void sendAndReplyToMeMessage() throws JMSException {
 
@@ -74,7 +74,7 @@ public class JmsSender {
         System.out.println("Scheduled Message Sent!! and It has been received!! + " + IsMessageReceived.getBody(String.class));
 
     }
-
+*/
     public void sendMessage(String message) {
 
         System.out.println(message);

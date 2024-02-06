@@ -1,21 +1,15 @@
 package com.jesusfc.demo;
 
-import com.jesusfc.demo.config.JmsMessageConfig;
-import com.jesusfc.demo.model.JmsMessage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.jms.core.JmsTemplate;
-
-import java.util.UUID;
 
 @SpringBootApplication
 public class Spb3Java17JmsKafkaApplication {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		// Launch the application
-		ConfigurableApplicationContext context = SpringApplication.run(Spb3Java17JmsKafkaApplication.class, args);
+        // Launch the application
+/*		ConfigurableApplicationContext context = SpringApplication.run(Spb3Java17JmsKafkaApplication.class, args);
 
 		JmsTemplate jmsTemplate = context.getBean(JmsTemplate.class);
 
@@ -31,6 +25,8 @@ public class Spb3Java17JmsKafkaApplication {
 		jmsTemplate.convertAndSend(JmsMessageConfig.MY_QUEUE, jmsMessage);
 
 	}
+*/
 
-
+        SpringApplication.run(Spb3Java17JmsKafkaApplication.class, args);
+    }
 }
