@@ -12,10 +12,10 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>spb3-java17-jms-kafka</artifactId>
+    <artifactId>spb3-java17-jms-kafka-service-1</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spb3-java17-jms-kafka</name>
-    <description>Project to test JMS Messaging and Apache Kafka with Spring Boot 3 and Java 17</description>
+    <name>spb3-java17-jms-kafka-service-1</name>
+    <description>Service 1 - Project to test JMS Messaging and Apache Kafka with Spring Boot 3 and Java 17</description>
 
     <properties>
         <jacocoVersion>0.8.10</jacocoVersion>
