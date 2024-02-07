@@ -2,7 +2,7 @@
 # Service 1 into a MicroService Architecture
 ###################################
 # SpringBoot 3 with Java 17, JMS Messaging and Apache Kafka
-## (spb3-java17-jms-kafka)
+## (spb3-java17-jms-kafka-Service-1)
 Project to test JMS Messaging and Apache Kafka with Spring Boot 3 and Java 17
 - Maven
 - Project Lombok
