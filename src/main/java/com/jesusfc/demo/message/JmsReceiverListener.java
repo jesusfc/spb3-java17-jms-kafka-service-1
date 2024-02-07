@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
  * Created on ene - 2024
  */
 @Component
-public class JmsReceiver {
+public class JmsReceiverListener {
 
-    @JmsListener(destination = JmsMessageConfig.MY_QUEUE)
+    //@JmsListener(destination = JmsMessageConfig.MY_QUEUE)
     public void receiveMessage(@Payload JmsMessage helloWorldMessage,
                                @Headers MessageHeaders headers, Message message) {
 

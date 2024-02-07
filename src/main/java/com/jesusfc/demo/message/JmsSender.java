@@ -1,13 +1,18 @@
 package com.jesusfc.demo.message;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jesusfc.demo.config.JmsMessageConfig;
 import com.jesusfc.demo.model.JmsMessage;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
 import lombok.AllArgsConstructor;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -24,35 +29,35 @@ public class JmsSender {
     @Scheduled(fixedRate = 5000) // every 5 seconds
     public void sendMessage() {
         try {
-            System.out.println("Test Message Scheduled");
+            System.out.println("Message  1 - Test Message Scheduled");
 
             JmsMessage message = JmsMessage
                     .builder()
                     .uuid(UUID.randomUUID())
-                    .message("Test Message Scheduled")
+                    .to("jfcaraballo@gmail.com")
+                    .message("Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_QUEUE + ", " + LocalDateTime.now())
+                    .body("Body Test 1 Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_QUEUE + ", " + LocalDateTime.now())
                     .build();
 
             jmsTemplate.convertAndSend(JmsMessageConfig.MY_QUEUE, message);
-            System.out.println("Scheduled Message Sent!");
+            System.out.println("Message 1 - Scheduled Message Sent!");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-
-    /*
-    @Scheduled(fixedRate = 5000) // every 5 seconds
+    //  @Scheduled(fixedRate = 10000) // every 10 seconds
     public void sendAndReplyToMeMessage() throws JMSException {
 
-        System.out.println("Test Message Scheduled");
+        System.out.println("Message 2 - Test Message Scheduled");
 
         JmsMessage message = JmsMessage
                 .builder()
                 .uuid(UUID.randomUUID())
                 .to("jfcaraballo@gmail.com")
-                .message("Test Message Scheduled")
-                .body("reply_back_to_me")
+                .message("Message Scheduled send and received, Queue: " + JmsMessageConfig.MY_SEND_RCV_QUEUE + ", " + LocalDateTime.now())
+                .body("Body Test 2 Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_SEND_RCV_QUEUE + ", " + LocalDateTime.now())
                 .build();
 
         // Interface funcional de la que se envía el mensaje
@@ -71,10 +76,10 @@ public class JmsSender {
 
         Message IsMessageReceived = jmsTemplate.sendAndReceive(JmsMessageConfig.MY_SEND_RCV_QUEUE, messageCreator);
 
-        System.out.println("Scheduled Message Sent!! and It has been received!! + " + IsMessageReceived.getBody(String.class));
+        System.out.println("Scheduled Message Sent!! and It has been RECEIVED!! -> " + IsMessageReceived.getBody(String.class));
 
     }
-*/
+
     public void sendMessage(String message) {
 
         System.out.println(message);

@@ -11,10 +11,10 @@ import org.springframework.boot.test.context.SpringBootTest;
  * Created on ene - 2024
  */
 @SpringBootTest
-class JmsReceiverTest {
+class JmsReceiverListenerTest {
 
     @Autowired
-    private JmsReceiver jmsReceiver;
+    private JmsReceiverListener jmsReceiverListener;
 
     @Test
     void receiveMessage() {
