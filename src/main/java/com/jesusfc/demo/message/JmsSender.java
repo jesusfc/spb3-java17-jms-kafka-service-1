@@ -8,7 +8,6 @@ import jakarta.jms.JMSException;
 import jakarta.jms.Message;
 import lombok.AllArgsConstructor;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,57 +25,56 @@ public class JmsSender {
     private JmsTemplate jmsTemplate;
     private ObjectMapper objectMapper;
 
-    @Scheduled(fixedRate = 5000) // every 5 seconds
+    //@Scheduled(fixedRate = 5000) // every 5 seconds
     public void sendMessage() {
         try {
-            System.out.println("Message  1 - Test Message Scheduled");
+            System.out.println("Message Service 1 - Test Message Scheduled");
 
             JmsMessage message = JmsMessage
                     .builder()
                     .uuid(UUID.randomUUID())
                     .to("jfcaraballo@gmail.com")
-                    .message("Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_QUEUE + ", " + LocalDateTime.now())
-                    .body("Body Test 1 Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_QUEUE + ", " + LocalDateTime.now())
+                    .message("Service 1- Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_QUEUE + ", " + LocalDateTime.now())
+                    .body("Service 1 - Body Test 1 Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_QUEUE + ", " + LocalDateTime.now())
                     .build();
 
             jmsTemplate.convertAndSend(JmsMessageConfig.MY_QUEUE, message);
-            System.out.println("Message 1 - Scheduled Message Sent!");
+            System.out.println("Message Service 1 - Scheduled Message Sent!");
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
-    //  @Scheduled(fixedRate = 10000) // every 10 seconds
+    @Scheduled(fixedRate = 10000) // every 10 seconds
     public void sendAndReplyToMeMessage() throws JMSException {
 
-        System.out.println("Message 2 - Test Message Scheduled");
+        System.out.println("Service 1 - Message 2 - Test Message Scheduled");
 
         JmsMessage message = JmsMessage
                 .builder()
                 .uuid(UUID.randomUUID())
                 .to("jfcaraballo@gmail.com")
-                .message("Message Scheduled send and received, Queue: " + JmsMessageConfig.MY_SEND_RCV_QUEUE + ", " + LocalDateTime.now())
-                .body("Body Test 2 Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_SEND_RCV_QUEUE + ", " + LocalDateTime.now())
+                .message("Service 1 - Message 2 Scheduled send and received, Queue: " + JmsMessageConfig.MY_SEND_RCV_QUEUE + ", " + LocalDateTime.now())
+                .body("Service 1 - Body Test 2 Message Scheduled convert and send, Queue: " + JmsMessageConfig.MY_SEND_RCV_QUEUE + ", " + LocalDateTime.now())
                 .build();
 
-        // Interface funcional de la que se envía el mensaje
-        MessageCreator messageCreator = session -> {
+        Message IsMessageReceived = jmsTemplate.sendAndReceive(JmsMessageConfig.MY_SEND_RCV_QUEUE, session -> {
             try {
-
                 Message helloMessage = session.createTextMessage(objectMapper.writeValueAsString(message));
+                helloMessage.setJMSPriority(1);
                 helloMessage.setStringProperty("_type", "com.jesusfc.demo.model.JmsMessage");
                 return helloMessage;
-
             } catch (JsonProcessingException e) {
                 throw new JMSException(e.getMessage());
             }
+        });
 
-        };
-
-        Message IsMessageReceived = jmsTemplate.sendAndReceive(JmsMessageConfig.MY_SEND_RCV_QUEUE, messageCreator);
-
-        System.out.println("Scheduled Message Sent!! and It has been RECEIVED!! -> " + IsMessageReceived.getBody(String.class));
+        if (IsMessageReceived != null) {
+            System.out.println("Service 1 - Scheduled Message Sent!! and It has been RECEIVED!! -> " + IsMessageReceived.getBody(String.class));
+        } else {
+            System.out.println("Message NULL Received!");
+        }
 
     }
 
