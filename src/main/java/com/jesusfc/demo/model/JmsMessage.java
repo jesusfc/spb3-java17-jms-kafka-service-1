@@ -21,5 +21,6 @@ public class JmsMessage {
     private String to;
     private String message;
     private String body;
+    private String _type;
 
 }

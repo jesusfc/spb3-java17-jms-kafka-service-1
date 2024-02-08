@@ -1,6 +1,7 @@
 package com.jesusfc.demo.controller;
 
 import com.jesusfc.demo.message.JmsSender;
+import jakarta.jms.JMSException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ class JmsControllerTest {
     }
 
     @Test
-    void shouldSendMessage() {
+    void shouldSendMessage() throws JMSException {
         // given
         final String message = "Hello World!";
 

@@ -1,6 +1,7 @@
 package com.jesusfc.demo.controller;
 
 import com.jesusfc.demo.message.JmsSender;
+import jakarta.jms.JMSException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,7 +24,11 @@ public class JmsController {
      */
     @PostMapping("/send")
     public void sendMessage(@RequestBody String message) {
-        jmsSender.sendMessage(message);
+        try {
+            jmsSender.sendMessage(message);
+        } catch (JMSException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
