@@ -1,10 +1,12 @@
 package com.jesusfc.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -15,12 +17,10 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JmsMessage {
-
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "_type")
+public class JmsMessage implements Serializable {
     private UUID uuid;
     private String to;
     private String message;
     private String body;
-    private String _type;
-
 }
