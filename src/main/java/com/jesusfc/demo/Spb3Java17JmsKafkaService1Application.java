@@ -6,7 +6,7 @@ import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
 @EnableJms
-public class Spb3Java17JmsKafkaApplication {
+public class Spb3Java17JmsKafkaService1Application {
 
     public static void main(String[] args) {
 
@@ -29,6 +29,6 @@ public class Spb3Java17JmsKafkaApplication {
 	}
 */
 
-        SpringApplication.run(Spb3Java17JmsKafkaApplication.class, args);
+        SpringApplication.run(Spb3Java17JmsKafkaService1Application.class, args);
     }
 }
