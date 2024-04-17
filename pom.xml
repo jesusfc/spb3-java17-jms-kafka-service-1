@@ -18,7 +18,7 @@
     <description>Service 1 - Project to test JMS Messaging and Apache Kafka with Spring Boot 3 and Java 17</description>
 
     <properties>
-        <jacocoVersion>0.8.10</jacocoVersion>
+        <jacocoVersion>0.8.12</jacocoVersion>
     </properties>
 
     <dependencies>
@@ -29,11 +29,11 @@
             <artifactId>spring-boot-starter-artemis</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <scope>runtime</scope>
-            <optional>true</optional>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>4.1.1</version>
         </dependency>
 
         <!--dependency>
