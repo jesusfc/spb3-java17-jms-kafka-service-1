@@ -1,5 +1,6 @@
 package com.jesusfc.demo.controller;
 
+import com.jesusfc.demo.service.DemoServiceFeignClient;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Service1Controller {
 
+    private final DemoServiceFeignClient demoServiceFeignClient;
 
     @GetMapping("/get")
     public ResponseEntity<String> getService1Get1() {
@@ -26,5 +28,11 @@ public class Service1Controller {
     public ResponseEntity<String> getService1Get2() {
         return new ResponseEntity<>("El servicio 1 - Get 2 - responde OK", HttpStatus.OK);
     }
+
+    @GetMapping("/get3")
+    public ResponseEntity<String> getService1GetFeignService() {
+        return demoServiceFeignClient.getDemoFeignService1();
+    }
+
 
 }
