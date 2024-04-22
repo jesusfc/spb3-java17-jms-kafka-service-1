@@ -31,6 +31,7 @@ public class Service1Controller {
 
     @GetMapping("/get3")
     public ResponseEntity<String> getService1GetFeignService() {
+        System.out.println("Llamada un servicio externo con Feign");
         return demoServiceFeignClient.getDemoFeignService1();
     }
 
