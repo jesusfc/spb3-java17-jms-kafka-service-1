@@ -19,7 +19,7 @@
 
     <properties>
         <jacocoVersion>0.8.12</jacocoVersion>
-        <spring-cloud.version>2023.0.1</spring-cloud.version>
+
     </properties>
 
     <dependencies>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-dependencies</artifactId>
-            <version>${spring-cloud.version}</version>
+            <version>${spring-cloud-dependency.version}</version>
             <type>pom</type>
             <scope>import</scope>
         </dependency>
