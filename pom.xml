@@ -19,6 +19,8 @@
 
     <properties>
         <jacocoVersion>0.8.12</jacocoVersion>
+        <spring-boot.version>3.4.0</spring-boot.version>
+        <spring-cloud.version>4.2.0</spring-cloud.version>
     </properties>
 
     <dependencies>
