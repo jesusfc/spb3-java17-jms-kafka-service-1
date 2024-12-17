@@ -25,6 +25,12 @@
 
     <dependencies>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
         <!-- JMS Messaging Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -43,7 +49,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
-            <version>4.1.2</version>
+            <version>4.2.0</version>
         </dependency>
 
         <dependency>

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "feign-service", url = "http://localhost:8082/service_2", configuration = FeignClientsConfig.class)
 public interface DemoServiceFeignClient {
 
-    @GetMapping("/get")
+    @GetMapping("/getFeign")
     ResponseEntity<String> getDemoFeignService1();
 
 }
