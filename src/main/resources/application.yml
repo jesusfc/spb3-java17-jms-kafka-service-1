@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: spb3-service-1
+  config:
+    import: optional:configserver:http://localhost:8888
