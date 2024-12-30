@@ -12,3 +12,9 @@ spring:
     user:
       name: myService1UserName
       password: myService1Password
+
+# Basic authentication for the service 2
+feign:
+  client-service-2:
+    username: myService2UserName
+    password: myService2Password
