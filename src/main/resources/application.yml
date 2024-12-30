@@ -8,7 +8,7 @@ spring:
       fail-fast: true # If set to true, the application will fail to start if there is an error in the configuration server.
       username: mySuperUserName
       password: mySuperPassword
-  security: ## User and password to access to the service 2
+  security: ## User and password to access to the service 1
     user:
       name: myService1UserName
       password: myService1Password
