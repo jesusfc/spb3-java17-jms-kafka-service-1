@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * jesus.fdez.caraballo@gmail.com
  * Created on abr - 2024
  */
-@FeignClient(name = "feign-service", url = "http://localhost:8082/service_2", configuration = FeignClientsConfig.class)
+@FeignClient(name = "feign-service", url = "spb3-service-2:8082/service_2", configuration = FeignClientsConfig.class)
 public interface DemoServiceFeignClient {
 
     @GetMapping("/getFeign")

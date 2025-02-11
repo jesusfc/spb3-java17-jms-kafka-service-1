@@ -3,6 +3,8 @@ spring:
     name: spb3-service-1
   config:
     import: optional:configserver:http://localhost:8888
+    activate:
+      on-profile: development
   cloud:
     config:
       fail-fast: true # If set to true, the application will fail to start if there is an error in the configuration server.
