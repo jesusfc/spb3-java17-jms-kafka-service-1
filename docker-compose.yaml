@@ -11,5 +11,5 @@ services:
       - my_spring-cloud-network
 
 networks:
-  my_network:
+  my_spring-cloud-network:
     driver: bridge
