@@ -2,7 +2,7 @@ spring:
   application:
     name: spb3-service-1
   config:
-    import: optional:configserver:spring-cloud-config-server:8888
+    import: optional:configserver:http://localhost:8888
     activate:
       on-profile: development
   cloud:
