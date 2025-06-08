@@ -19,25 +19,29 @@
 
     <properties>
         <jacocoVersion>0.8.12</jacocoVersion>
-        <spring-boot.version>3.4.0</spring-boot.version>
         <spring-cloud.version>4.2.0</spring-cloud.version>
         <docker.image.prefix>jfcaraballo</docker.image.prefix>
         <docker.image.name>${project.artifactId}</docker.image.name>
+        <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
     </properties>
 
     <dependencies>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
-            <version>${spring-boot.version}</version>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <!-- JMS Messaging Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-artemis</artifactId>
-            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <!--  -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
@@ -85,6 +89,20 @@
             <version>${jacocoVersion}</version>
         </dependency>
 
+        <!-- Driver for MySql -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- Hibernate Validator Engine Relocation Artifact -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>8.0.1.Final</version>
+        </dependency>
 
         <!-- Kafka Dependencies
         <dependency>

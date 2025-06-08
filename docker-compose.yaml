@@ -9,6 +9,8 @@ services:
       - SPRING_PROFILES_ACTIVE=development-secure
     networks:
       - my_spring-cloud-network
+    depends_on:
+      - mysql
 
 networks:
   my_spring-cloud-network:
