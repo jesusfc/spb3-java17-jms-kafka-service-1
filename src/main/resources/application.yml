@@ -14,6 +14,12 @@ spring:
     user:
       name: myService1UserName
       password: myService1Password
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.value.default.type: com.jesusfc.demo.kafka.message.OrderCreated
 
 # Basic authentication for the service 2
 feign:
