@@ -19,10 +19,18 @@ public class OrderCreatedHandler {
 
     private final DispatchService dispatchService;
 
-    @KafkaListener(id ="orderConsumerClient", topics = "my.super.topic", groupId = "my.super.group")
+    @KafkaListener(
+            id = "orderConsumerClient",
+            topics = "my.super.topic",
+            groupId = "my.super.group",
+            containerFactory = "kafkaListenerContainerFactory"
+    )
     public void listen(OrderCreated payload) {
         log.info("Order created with ID: {}", payload);
-        dispatchService.process(payload);
-        // Add your business logic here
+        try {
+            dispatchService.process(payload);
+        } catch (Exception e) {
+            log.error("Error processing order created event: {}", payload, e);
+        }
     }
 }
