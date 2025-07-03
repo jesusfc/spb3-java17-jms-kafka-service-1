@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class DispatchService {
 
-    private static final String ORDER_DISPATCHED_TOPIC = "order.dispatched";
+    private static final String ORDER_DISPATCHED_TOPIC = "my.consumer.topic";
     private final KafkaTemplate<String, Object> kafkaProducer;
 
 

@@ -38,18 +38,18 @@ class DispatchServiceTest {
 
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(UUID.randomUUID(), UUID.randomUUID().toString());
         dispatchService.process(testEvent);
-        verify(kafkaTemplateMock, times(1)).send(eq("order.dispatched"), any(OrderDispatched.class));
+        verify(kafkaTemplateMock, times(1)).send(eq("my.consumer.topic"), any(OrderDispatched.class));
     }
 
     @Test
     void process_ProducerThrowsException() {
 
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(UUID.randomUUID(), UUID.randomUUID().toString());
-        doThrow(new RuntimeException("Kafka producer error")).when(kafkaTemplateMock).send(eq("order.dispatched"), any(OrderDispatched.class));
+        doThrow(new RuntimeException("Kafka producer error")).when(kafkaTemplateMock).send(eq("my.consumer.topic"), any(OrderDispatched.class));
 
         Exception exception = assertThrows(RuntimeException.class, () -> dispatchService.process(testEvent));
 
-        verify(kafkaTemplateMock, times(1)).send(eq("order.dispatched"), any(OrderDispatched.class));
+        verify(kafkaTemplateMock, times(1)).send(eq("my.consumer.topic"), any(OrderDispatched.class));
         assertThat(exception.getMessage()).contains("Kafka producer error");
 
 
