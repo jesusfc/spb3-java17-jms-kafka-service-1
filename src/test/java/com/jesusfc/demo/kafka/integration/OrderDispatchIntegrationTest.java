@@ -43,23 +43,23 @@ import static org.hamcrest.Matchers.equalTo;
 @Import(OrderDispatchIntegrationTest.TestConfig.class)
 @ActiveProfiles("test")
 @EmbeddedKafka(controlledShutdown = true)
-public class OrderDispatchIntegrationTest {
+class OrderDispatchIntegrationTest {
 
     private static final String MY_PRODUCER_TOPIC = "my.super.topic";
     private static final String MY_CONSUMER_TOPIC = "my.consumer.topic";
     private static final String DISPATCH_TRACKING_TOPIC = "my.dispatch.tracking.topic";
 
     @Autowired
-    private KafkaTemplate kafkaTemplate;
-
-    @Autowired
-    private KafkaTestListener testListener;
-
-    @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
 
     @Autowired
     private KafkaListenerEndpointRegistry registry;
+
+    @Autowired
+    private KafkaTemplate kafkaTemplate;
+
+    @Autowired
+    private KafkaTestListener testListener;
 
     @Configuration
     static class TestConfig {
@@ -90,7 +90,7 @@ public class OrderDispatchIntegrationTest {
     }
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         testListener.dispatchPreparingCounter.set(0);
         testListener.orderDispatchedCounter.set(0);
 
@@ -101,7 +101,7 @@ public class OrderDispatchIntegrationTest {
     }
 
     @Test
-    public void testOrderDispatchFlow() throws ExecutionException, InterruptedException {
+    void testOrderDispatchFlow() throws ExecutionException, InterruptedException {
 
         OrderCreated orderDispatched = TestEventData.buildOrderCreatedEvent(randomUUID(), "tracking123");
         sendMessageOrderDispatched(MY_PRODUCER_TOPIC, orderDispatched);
