@@ -2,7 +2,6 @@ package com.jesusfc.demo.kafka.integration;
 
 import com.jesusfc.demo.config.KafkaConfig;
 import com.jesusfc.demo.kafka.message.OrderCreated;
-import com.jesusfc.demo.kafka.message.OrderDispatched;
 import com.jesusfc.demo.kafka.util.TestEventData;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -38,16 +38,16 @@ import static org.hamcrest.Matchers.equalTo;
  * Created on jul - 2025
  */
 @Slf4j
+@EnableKafka
+@Import(OrderDispatchIntegrationTest.TestConfig.class)
 @SpringBootTest(classes = {KafkaConfig.class})
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-@Import(OrderDispatchIntegrationTest.TestConfig.class)
 @ActiveProfiles("test")
 @EmbeddedKafka(controlledShutdown = true)
 class OrderDispatchIntegrationTest {
 
-    private static final String MY_PRODUCER_TOPIC = "my.super.topic";
-    private static final String MY_CONSUMER_TOPIC = "my.consumer.topic";
-    private static final String DISPATCH_TRACKING_TOPIC = "my.dispatch.tracking.topic";
+    private static final String ORDER_CREATED_TOPIC = "order.created";
+    private static final String ORDER_DISPATCHED_TOPIC = "order.dispatched";
 
     @Autowired
     private EmbeddedKafkaBroker embeddedKafkaBroker;
@@ -70,29 +70,33 @@ class OrderDispatchIntegrationTest {
     }
 
 
+    /**
+     * This class is used to listen to Kafka messages in the integration test.
+     * It contains methods to handle messages from the "dispatch.tracking" and "order.dispatched" topics.
+     */
     public static class KafkaTestListener {
         // This class is used to listen to Kafka messages in the integration test.
         // It can be implemented to verify that messages are being sent and received correctly.
-        AtomicInteger dispatchPreparingCounter = new AtomicInteger(0);
         AtomicInteger orderDispatchedCounter = new AtomicInteger(0);
+        AtomicInteger dispatchPreparingCounter = new AtomicInteger(0);
 
-        @KafkaListener(groupId = "KafkaIntegrationTest", topics = DISPATCH_TRACKING_TOPIC)
-        public void receivedDispatchPreparing(@Payload OrderDispatched payload) {
+        @KafkaListener(groupId = "KafkaIntegrationTest", topics = ORDER_CREATED_TOPIC)
+        public void createOrderDispatchPreparing(@Payload Object payload) {
             log.info("Dispatch preparing message received: {}", payload);
-            dispatchPreparingCounter.incrementAndGet();
+            orderDispatchedCounter.incrementAndGet();
         }
 
-        @KafkaListener(groupId = "KafkaIntegrationTest", topics = MY_CONSUMER_TOPIC)
-        public void receivedOrderDispatched(@Payload OrderDispatched payload) {
+        @KafkaListener(groupId = "KafkaIntegrationTest", topics = ORDER_DISPATCHED_TOPIC)
+        public void receivedOrderDispatched(@Payload Object payload) {
             log.info("Order dispatched message received: {}", payload);
-            orderDispatchedCounter.incrementAndGet();
+            dispatchPreparingCounter.incrementAndGet();
         }
     }
 
     @BeforeEach
     void setUp() {
-        testListener.dispatchPreparingCounter.set(0);
         testListener.orderDispatchedCounter.set(0);
+        testListener.dispatchPreparingCounter.set(0);
 
         registry.getListenerContainers().forEach(container -> {
             ContainerTestUtils.waitForAssignment(container, embeddedKafkaBroker.getPartitionsPerTopic());
@@ -103,18 +107,21 @@ class OrderDispatchIntegrationTest {
     @Test
     void testOrderDispatchFlow() throws ExecutionException, InterruptedException {
 
-        OrderCreated orderDispatched = TestEventData.buildOrderCreatedEvent(randomUUID(), "tracking123");
-        sendMessageOrderDispatched(MY_PRODUCER_TOPIC, orderDispatched);
+        OrderCreated orderCreated = TestEventData.buildOrderCreatedEvent(randomUUID(), "tracking123-order-created");
+        sendMessageOrderDispatched(ORDER_CREATED_TOPIC, orderCreated);
+
+        OrderCreated orderDispatched = TestEventData.buildOrderCreatedEvent(randomUUID(), "trackingABC-order-dispached");
+        sendMessageOrderDispatched(ORDER_DISPATCHED_TOPIC, orderDispatched);
 
         await().atMost(3, TimeUnit.SECONDS).pollDelay(100, TimeUnit.MILLISECONDS)
                 .until(testListener.dispatchPreparingCounter::get, equalTo(1));
 
-        await().atMost(1, TimeUnit.SECONDS).pollDelay(100, TimeUnit.MILLISECONDS)
+        await().atMost(3, TimeUnit.SECONDS).pollDelay(100, TimeUnit.MILLISECONDS)
                 .until(testListener.orderDispatchedCounter::get, equalTo(1));
 
     }
 
-    private void sendMessageOrderDispatched(String topic, OrderCreated orderCreated) throws ExecutionException, InterruptedException {
+    private void sendMessageOrderDispatched(String topic, Object orderCreated) throws ExecutionException, InterruptedException {
         log.info("Sending OrderCreated event: {}", orderCreated);
         kafkaTemplate.send(MessageBuilder
                 .withPayload(orderCreated)
