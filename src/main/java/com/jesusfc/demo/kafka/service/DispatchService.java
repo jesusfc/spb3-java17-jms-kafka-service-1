@@ -30,7 +30,7 @@ public class DispatchService {
 
     /**
      * Desde la consola de Kafka "Producer" enviamos un mensaje JSON al topic "my.order.created.topic",
-     * el listener OrderCreatedHandler lo recibe y llama a este servicio DispatchService para procesar el evento.
+     * el listener OrderCreatedHandler lo recibe y llama al DispatchService para procesar el evento.
      * Una vez procesado, este servicio envía un nuevo mensaje al topic "my.order.dispatched.topic", el cual
      * será consumido por otro servicio o aplicación que esté escuchando ese topic, en nuestro caso, será
      * la consola de Kafka "Consumer" la que reciba el mensaje.
