@@ -19,6 +19,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.test.annotation.DirtiesContext;
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.util.UUID.randomUUID;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Author Jesús Fdez. Caraballo
@@ -81,14 +83,18 @@ class OrderDispatchIntegrationTest {
         AtomicInteger dispatchPreparingCounter = new AtomicInteger(0);
 
         @KafkaListener(groupId = "KafkaIntegrationTest", topics = ORDER_CREATED_TOPIC)
-        public void createOrderDispatchPreparing(@Payload Object payload) {
-            log.info("Dispatch preparing message received: {}", payload);
+        public void createOrderDispatchPreparing(@Header(KafkaHeaders.RECEIVED_KEY) String key,  @Payload Object payload) {
+            log.info("Dispatch preparing message, key: {}, received: {}", key, payload);
+            assertNotNull(payload);
+            assertNotNull(key);
             orderDispatchedCounter.incrementAndGet();
         }
 
         @KafkaListener(groupId = "KafkaIntegrationTest", topics = ORDER_DISPATCHED_TOPIC)
-        public void receivedOrderDispatched(@Payload Object payload) {
-            log.info("Order dispatched message received: {}", payload);
+        public void receivedOrderDispatched(@Header(KafkaHeaders.RECEIVED_KEY) String key, @Payload Object payload) {
+            log.info("Order dispatched message key {}, received: {}", key, payload);
+            assertNotNull(payload);
+            assertNotNull(key);
             dispatchPreparingCounter.incrementAndGet();
         }
     }

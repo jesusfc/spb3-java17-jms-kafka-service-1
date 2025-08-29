@@ -51,7 +51,7 @@ public class DispatchService {
      * procesarían independientemente.
      *
      */
-    public void process(OrderCreated orderCreated) throws ExecutionException, InterruptedException {
+    public void process(Integer partition, String key, OrderCreated orderCreated) throws ExecutionException, InterruptedException {
 
         OrderDispatched orderDispatched = OrderDispatched.builder()
                 .orderId(orderCreated.getOrderId())
@@ -59,8 +59,13 @@ public class DispatchService {
                 .item(orderCreated.getItem() + " - dispatched")
                 .notes("Dispatched: " + orderCreated.getItem())
                 .build();
+
         log.info("Processing orderDispatched (send to another topic): {}", orderDispatched);
-        kafkaProducer.send(ORDER_DISPATCHED_TOPIC, orderDispatched).get();
-        log.info("Send Message: orderId: {} - processedById: {}", orderDispatched.getOrderId(), APPLICATION_ID);
+
+        // Enviamos el mensaje al topic "my.order.dispatched.topic"
+        kafkaProducer.send(ORDER_DISPATCHED_TOPIC, partition, key, orderDispatched).get();
+
+        log.info("Send Message: orderId: {} - processedById: {}, partition: {}, key: {}", orderDispatched.getOrderId(), APPLICATION_ID, partition, key);
+
     }
 }

@@ -5,6 +5,9 @@ import com.jesusfc.demo.kafka.service.DispatchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 /**
@@ -35,12 +38,15 @@ public class OrderCreatedHandler {
             groupId = "my.super.group",
             containerFactory = "kafkaListenerContainerFactory"
     )
-    public void listen(OrderCreated payload) {
-        log.info("Order created with ID: {}", payload);
+    public void listen(@Header(KafkaHeaders.RECEIVED_PARTITION) Integer partition,
+                       @Header(KafkaHeaders.RECEIVED_KEY) String key,
+                       @Payload OrderCreated payload) {
+
         try {
-            // Envía el mensaje a DispatchService para su procesamiento
-            log.info("Processing order created event: {}", payload);
-            dispatchService.process(payload);
+
+            log.info("Processing order created event, partition: {}, key: {}, payload: {}", partition, key, payload);
+            dispatchService.process(partition, key, payload);
+
         } catch (Exception e) {
             log.error("Error processing order created event: {}", payload, e);
         }

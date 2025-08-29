@@ -20,6 +20,9 @@ class OrderCreatedHandlerTest {
     private OrderCreatedHandler handler;
     private DispatchService dispatchServiceMock;
 
+    private final static String TEST_KEY = "test-key";
+    private final static Integer TEST_PARTITION = 0;
+
     @BeforeEach
     void setUp() {
         dispatchServiceMock = mock(DispatchService.class);
@@ -29,7 +32,7 @@ class OrderCreatedHandlerTest {
     @Test
     void listen() throws Exception {
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(UUID.randomUUID(), UUID.randomUUID().toString());
-        handler.listen(testEvent);
-        verify(dispatchServiceMock, times(1)).process(testEvent);
+        handler.listen(TEST_PARTITION, TEST_KEY, testEvent);
+        verify(dispatchServiceMock, times(1)).process(TEST_PARTITION, TEST_KEY, testEvent);
     }
 }

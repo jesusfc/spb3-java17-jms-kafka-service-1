@@ -26,30 +26,39 @@ class DispatchServiceTest {
     private DispatchService dispatchService;
     private KafkaTemplate kafkaTemplateMock;
 
+    private final static String TOPIC = "my.order.dispatched.topic";
+    private final static String TEST_KEY = "test-key";
+    private final static Integer TEST_PARTITION = 0;
+
     @BeforeEach
     void setUp() {
+
+
         kafkaTemplateMock = mock(KafkaTemplate.class);
         dispatchService = new DispatchService(kafkaTemplateMock);
     }
 
     @Test
     void process() throws Exception {
-        when(kafkaTemplateMock.send(anyString(), any(OrderDispatched.class))).thenReturn(mock(CompletableFuture.class)); // Mock the send method
+
+        CompletableFuture<Void> futureMock = mock(CompletableFuture.class);
+        when(kafkaTemplateMock.send(anyString(), anyInt(), anyString(), any(OrderDispatched.class))).thenReturn(futureMock);
 
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(UUID.randomUUID(), UUID.randomUUID().toString());
-        dispatchService.process(testEvent);
-        verify(kafkaTemplateMock, times(1)).send(eq("my.order.dispatched.topic"), any(OrderDispatched.class));
+        dispatchService.process(TEST_PARTITION, TEST_KEY, testEvent);
+
+        verify(kafkaTemplateMock, times(1)).send(anyString(), anyInt(), anyString(), any(OrderDispatched.class));
     }
 
     @Test
     void process_ProducerThrowsException() {
 
         OrderCreated testEvent = TestEventData.buildOrderCreatedEvent(UUID.randomUUID(), UUID.randomUUID().toString());
-        doThrow(new RuntimeException("Kafka producer error")).when(kafkaTemplateMock).send(eq("my.order.dispatched.topic"), any(OrderDispatched.class));
+        doThrow(new RuntimeException("Kafka producer error")).when(kafkaTemplateMock).send(eq(TOPIC), anyInt(), anyString(), any(OrderDispatched.class));
 
-        Exception exception = assertThrows(RuntimeException.class, () -> dispatchService.process(testEvent));
+        Exception exception = assertThrows(RuntimeException.class, () -> dispatchService.process(TEST_PARTITION, TEST_KEY, testEvent));
 
-        verify(kafkaTemplateMock, times(1)).send(eq("my.order.dispatched.topic"), any(OrderDispatched.class));
+        verify(kafkaTemplateMock, times(1)).send(eq(TOPIC), anyInt(), anyString(), any(OrderDispatched.class));
         assertThat(exception.getMessage()).contains("Kafka producer error");
 
 
