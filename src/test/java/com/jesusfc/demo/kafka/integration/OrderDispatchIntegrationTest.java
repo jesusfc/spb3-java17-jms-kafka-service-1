@@ -83,7 +83,7 @@ class OrderDispatchIntegrationTest {
         AtomicInteger dispatchPreparingCounter = new AtomicInteger(0);
 
         @KafkaListener(groupId = "KafkaIntegrationTest", topics = ORDER_CREATED_TOPIC)
-        public void createOrderDispatchPreparing(@Header(KafkaHeaders.RECEIVED_KEY) String key,  @Payload Object payload) {
+        public void createOrderDispatchPreparing(@Header(KafkaHeaders.RECEIVED_KEY) String key, @Payload Object payload) {
             log.info("Dispatch preparing message, key: {}, received: {}", key, payload);
             assertNotNull(payload);
             assertNotNull(key);
@@ -114,10 +114,10 @@ class OrderDispatchIntegrationTest {
     void testOrderDispatchFlow() throws ExecutionException, InterruptedException {
 
         OrderCreated orderCreated = TestEventData.buildOrderCreatedEvent(randomUUID(), "tracking123-order-created");
-        sendMessageOrderDispatched(ORDER_CREATED_TOPIC, orderCreated);
+        sendMessageOrderDispatched("KEY_1", ORDER_CREATED_TOPIC, orderCreated);
 
         OrderCreated orderDispatched = TestEventData.buildOrderCreatedEvent(randomUUID(), "trackingABC-order-dispached");
-        sendMessageOrderDispatched(ORDER_DISPATCHED_TOPIC, orderDispatched);
+        sendMessageOrderDispatched("KEY_2", ORDER_DISPATCHED_TOPIC, orderDispatched);
 
         await().atMost(3, TimeUnit.SECONDS).pollDelay(100, TimeUnit.MILLISECONDS)
                 .until(testListener.dispatchPreparingCounter::get, equalTo(1));
@@ -127,12 +127,18 @@ class OrderDispatchIntegrationTest {
 
     }
 
-    private void sendMessageOrderDispatched(String topic, Object orderCreated) throws ExecutionException, InterruptedException {
+    private void sendMessageOrderDispatched(String key, String topic, Object orderCreated) throws ExecutionException, InterruptedException {
         log.info("Sending OrderCreated event: {}", orderCreated);
+        kafkaTemplate.send(topic, key, orderCreated).get();
+        /* Using MessageBuilder to set headers
         kafkaTemplate.send(MessageBuilder
                 .withPayload(orderCreated)
+                .setHeader(KafkaHeaders.RECEIVED_KEY, key)
                 .setHeader(KafkaHeaders.TOPIC, topic)
                 .build()).get();
+
+         */
         log.info("OrderCreated event sent successfully");
     }
+
 }
