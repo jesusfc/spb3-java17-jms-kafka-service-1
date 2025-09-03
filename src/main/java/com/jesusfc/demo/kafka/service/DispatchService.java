@@ -50,6 +50,12 @@ public class DispatchService {
      * grupo de consumidores, por ejemplo, "my.super.group" y "my.super.group.2", ambas recibirían todos los mensajes y los
      * procesarían independientemente.
      *
+     * Cuando asignamos una Key al mensaje, Kafka utiliza esa Key para determinar a qué partición se enviará el mensaje.
+     * Esto significa que todos los mensajes con la misma Key irán a la misma partición, lo que garantiza el orden de esos mensajes.
+     * Si no asignamos una Key, Kafka distribuirá los mensajes de manera round-robin entre las particiones disponibles.
+     * Esto puede llevar a que los mensajes lleguen en un orden diferente al que fueron enviados.
+     * Por lo tanto, si el orden de los mensajes es crucial para tu aplicación, es recomendable asignar una Key consistente a los mensajes relacionados.
+     *
      */
     public void process(Integer partition, String key, OrderCreated orderCreated) throws ExecutionException, InterruptedException {
 
